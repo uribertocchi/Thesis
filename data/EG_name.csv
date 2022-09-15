@@ -1,0 +1,58 @@
+,number,name
+1,E000,Universal Human Reference
+2,E003,H1 Cell Line
+3,E004,H1 BMP4 Derived Mesendoderm Cultured Cells
+4,E005,H1 BMP4 Derived Trophoblast Cultured Cells
+5,E006,H1 Derived Mesenchymal Stem Cells
+6,E007,H1 Derived Neuronal Progenitor Cultured Cells
+7,E011,hESC Derived CD184+ Endoderm Cultured Cells
+8,E012,hESC Derived CD56+ Ectoderm Cultured Cells
+9,E013,hESC Derived CD56+ Mesoderm Cultured Cells
+10,E016,HUES64 Cell Line
+11,E024,4star
+12,E027,Breast Myoepithelial Cells
+13,E028,Breast vHMEC
+14,E037,CD4 Memory Primary Cells
+15,E038,CD4 Naive Primary Cells
+16,E047,CD8 Naive Primary Cells
+17,E050,Mobilized CD34 Primary Cells Female
+18,E053,Neurosphere Cultured Cells Cortex Derived
+19,E054,Neurosphere Cultured Cells Ganglionic Eminence Derived
+20,E055,Penis Foreskin Fibroblast Primary Cells skin01
+21,E056,Penis Foreskin Fibroblast Primary Cells skin02
+22,E057,Penis Foreskin Keratinocyte Primary Cells skin02
+23,E058,Penis Foreskin Keratinocyte Primary Cells skin03
+24,E059,Penis Foreskin Melanocyte Primary Cells skin01
+25,E061,Penis Foreskin Melanocyte Primary Cells skin03
+26,E062,Peripheral Blood Mononuclear Primary Cells
+27,E065,Aorta
+28,E066,Adult Liver
+29,E070,Brain Germinal Matrix
+30,E071,Brain Hippocampus Middle
+31,E079,Esophagus
+32,E082,Fetal Brain Female
+33,E084,Fetal Intestine Large
+34,E085,Fetal Intestine Small
+35,E087,Pancreatic Islets
+36,E094,Gastric
+37,E095,Left Ventricle
+38,E096,Lung
+39,E097,Ovary
+40,E098,Pancreas
+41,E100,Psoas Muscle
+42,E104,Right Atrium
+43,E105,Right Ventricle
+44,E106,Sigmoid Colon
+45,E109,Small Intestine
+46,E112,Thymus
+47,E113,Spleen
+48,E114,A549
+49,E116,GM12878
+50,E117,HELA
+51,E118,HEPG2
+52,E119,HMEC
+53,E120,HSMM
+54,E122,HUVEC
+55,E123,K562
+56,E127,NHEK
+57,E128,NHLF
