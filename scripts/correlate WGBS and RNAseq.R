@@ -5,17 +5,21 @@ library(stringr)
 library(scales)
 library(gridExtra)
 library(psych)
+library(WGCNA)
+library(EnsDb.Hsapiens.v79)
+library(ggpmisc)
+
 
 EG_name <- read_csv("/specific/elkon/uribertocchi/Meth_RNA-seq/Roadmap data/Roadmap_WGBS/EG_name.csv")
-EG_name <- EG_name[,-1]
 EG <- as.data.frame(colnames(WGBS_data))
 EG <- left_join(EG, EG_name,by = c("colnames(WGBS_data)" = 'number'))
 EG <- EG$'name'
+EG_name <- EG_name[,-1]
 
 #correlate WGBS and RNAseq
 WGBS_data <- read_csv("WGBS data with methylation avg per 1kb TSS.csv")
 WGBS_data <- as.data.frame(WGBS_data)
-rownames(WGBS_data) <- RNAseq_data$X1
+rownames(WGBS_data) <- RNAseq_data$...1
 WGBS_data <- WGBS_data[,-1]
 colnames(WGBS_data) <- EG
 
@@ -77,9 +81,6 @@ t_RNA <- t(RNAseq_data)
 rownames(t_RNA) <- EG
 colnames(t_RNA) <- rownames(RNAseq_data)
 
-t_cor <- cor(t_WGBS, t_RNA, method = "spearman", use = "pairwise.complete.obs")
-t_cor <- corAndPvalue(t_WGBS, t_RNA, method = "spearman")
-
 #Spearman correlation
 M <- data.frame(matrix(ncol=3,nrow=ncol(t_RNA)))
 M[,1] <- as.character()
@@ -101,15 +102,27 @@ write.csv(Spearman_correlation_WGBSXRNAseq, "Spearman_correlation_WGBSXRNAseq.cs
 top10genes <- M[1:10,1:2]
 top10genes$'names' <- rownames(top10genes)
 
+##convert Ensembl to Gene symbols
+ensembl.genes <- top10genes$'names'[1:10]
+geneIDs1 <- ensembldb::select(EnsDb.Hsapiens.v79, keys= ensembl.genes, keytype = "GENEID", columns = c("SYMBOL","GENEID"))
+geneIDs1$SYMBOL
+
 s <- lapply(1:10, function(i){
   gene <- top10genes$'names'[i]
+  gene_SYMBOL <- geneIDs1$SYMBOL[i]
   df <- data.frame(x=t_WGBS[,gene],y= t_RNA[,gene])
-  sp <- ggplot(data = df, aes(x = as.factor(df$x), y = as.numeric(df$y))) + stat_cor(method = "spearman", label.x = 3, label.y = 30) + geom_point() + labs(x = "DNA Methylation (%)", y = "Gene Exp. RPKM (log2)", title = gene) + theme_bw() + theme(axis.text.x=element_blank(),
-                                                                                                                                                                                           axis.ticks.x=element_blank(), panel.border = element_blank(), panel.grid.major = element_blank(),
-                                                                                                                                                                                                                                    panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) 
+  sp <- ggscatter(df, x = 'x', y = 'y',
+                  add = "reg.line",  # Add regressin line
+                  add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+                  conf.int = TRUE # Add confidence interval
+  ) + labs(x = "DNA Methylation (%)", y = "Gene Exp. RPKM", title = gene_SYMBOL) + theme_bw() + theme(axis.text.x=element_blank(),
+                                                                                                             axis.ticks.x=element_blank(), panel.border = element_blank(), panel.grid.major = element_blank(),
+                                                                                                             panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) 
   
-                                                                                                                                                                                                     
-})
-
-
+  
+  
+  # Add correlation coefficient
+  sp + stat_cor(method = "pearson")
+  })
 grid.arrange(grobs = s, ncol = 2)
+
