@@ -6,8 +6,9 @@ library(scales)
 library(gridExtra)
 library(psych)
 library(WGCNA)
-library(EnsDb.Hsapiens.v79)
+library(EnsDb.Hsapiens.v86)
 library(ggpmisc)
+library(ensembldb)
 
 
 EG_name <- read_csv("/specific/elkon/uribertocchi/Meth_RNA-seq/Roadmap data/Roadmap_WGBS/EG_name.csv")
@@ -94,7 +95,7 @@ for(i in 1:ncol(t_RNA)){
 }
 rownames(M) <- M$X1
 M <- M[,-1]
-M <- M[order(M$X2, decreasing = TRUE), ]  # Top N highest values by group
+M <- M[order(M$X2, decreasing = FALSE), ]  # Top N highest values by group
 Spearman_correlation_WGBSXRNAseq <- M
 write.csv(Spearman_correlation_WGBSXRNAseq, "Spearman_correlation_WGBSXRNAseq.csv")
 
@@ -104,7 +105,7 @@ top10genes$'names' <- rownames(top10genes)
 
 ##convert Ensembl to Gene symbols
 ensembl.genes <- top10genes$'names'[1:10]
-geneIDs1 <- ensembldb::select(EnsDb.Hsapiens.v79, keys= ensembl.genes, keytype = "GENEID", columns = c("SYMBOL","GENEID"))
+geneIDs1 <- ensembldb::select(EnsDb.Hsapiens.v86, keys= ensembl.genes, keytype = "GENEID", columns = c("SYMBOL","GENEID"))
 geneIDs1$SYMBOL
 
 s <- lapply(1:10, function(i){
