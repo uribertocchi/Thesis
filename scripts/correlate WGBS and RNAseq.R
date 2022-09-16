@@ -82,21 +82,38 @@ rownames(t_RNA) <- EG
 colnames(t_RNA) <- rownames(RNAseq_data)
 
 #Spearman correlation
-M <- data.frame(matrix(ncol=3,nrow=ncol(t_RNA)))
-M[,1] <- as.character()
+spearman <- data.frame(matrix(ncol=3,nrow=ncol(t_RNA)))
+spearman[,1] <- as.character()
 G <- colnames(t_RNA)
 for(i in 1:ncol(t_RNA)){
-  M[i,1] <- G[i]     
+  spearman[i,1] <- G[i]     
   cor <- corr.test(as.data.frame(t_RNA[,i]),as.data.frame(t_WGBS[,i]),
                    method="spearman",adjust="none")
-  M[i,2] <- cor$r
-  M[i,3] <- cor$p
+  spearman[i,2] <- cor$r
+  spearman[i,3] <- cor$p
 }
-rownames(M) <- M$X1
-M <- M[,-1]
-M <- M[order(M$X2, decreasing = TRUE), ]  # Top N highest values by group
-Spearman_correlation_WGBSXRNAseq <- M
+rownames(spearman) <- spearman$X1
+spearman <- spearman[,-1]
+spearman <- spearman[order(spearman$X2, decreasing = FALSE), ]  # Top N highest values by group
+Spearman_correlation_WGBSXRNAseq <- spearman
 write.csv(Spearman_correlation_WGBSXRNAseq, "Spearman_correlation_WGBSXRNAseq.csv")
+
+#Spearman correlation
+pearson <- data.frame(matrix(ncol=3,nrow=ncol(t_RNA)))
+pearson[,1] <- as.character()
+G <- colnames(t_RNA)
+for(i in 1:ncol(t_RNA)){
+  pearson[i,1] <- G[i]     
+  cor <- corr.test(as.data.frame(t_RNA[,i]),as.data.frame(t_WGBS[,i]),
+                   method="pearson",adjust="none")
+  pearson[i,2] <- cor$r
+  pearson[i,3] <- cor$p
+}
+rownames(pearson) <- pearson$X1
+pearson <- pearson[,-1]
+pearson <- pearson[order(pearson$X2, decreasing = FALSE), ]  # Top N highest values by group
+pearson_correlation_WGBSXRNAseq <- pearson
+write.csv(pearson_correlation_WGBSXRNAseq, "pearson_correlation_WGBSXRNAseq.csv")
 
 #plot top 10
 top10genes <- M[1:10,1:2]
@@ -122,7 +139,12 @@ s <- lapply(1:10, function(i){
   
   
   # Add correlation coefficient
-  sp + stat_cor(method = "pearson")
+  sp + stat_cor(method = "spearman")
   })
 grid.arrange(grobs = s, ncol = 2)
 
+#Density plots
+Spearman_densityplot <- plot(density(na.omit(Spearman_correlation_WGBSXRNAseq$X2)))
+pearson_densityplot <- plot(density(na.omit(pearson_correlation_WGBSXRNAseq$X2)))
+
+     
