@@ -29,7 +29,7 @@ rownames(RNAseq_data) <- RNAseq_data[,1]
 RNAseq_data <- RNAseq_data[,-1]
 colnames(RNAseq_data) <- EG
 
-cor <- cor(as.data.frame(WGBS_data),as.data.frame(RNAseq_data),method = "spearman", use = 'complete.obs')
+cor <- cor(as.data.frame(WGBS_data),as.data.frame(RNAseq_data),method = "pearson", use = 'complete.obs')
 
 #scatterplot selected sample
 data <- as.data.frame(cbind(WGBS_data$E071, RNAseq_data$E071))
@@ -144,7 +144,17 @@ s <- lapply(1:10, function(i){
 grid.arrange(grobs = s, ncol = 2)
 
 #Density plots
-Spearman_densityplot <- plot(density(na.omit(Spearman_correlation_WGBSXRNAseq$X2)))
+Spearman_densityplot <- ggdensity(na.omit(Spearman_correlation_WGBSXRNAseq$X2)) + labs(x = "Correlation r", y = "Density", title = 'Density of methylation*expression (spearman)') + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                                                                                                                                                                                  panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) 
+
+
+
+pearson_densityplot <- ggdensity(na.omit(pearson_correlation_WGBSXRNAseq$X2)) + labs(x = "Correlation r", y = "Density", title = 'Density of methylation*expression (pearson)') + theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                                                                                                                                                                                                       panel.grid.minor = element_blank(), axis.line = element_line(colour = "black")) 
+
+
+
+
 pearson_densityplot <- plot(density(na.omit(pearson_correlation_WGBSXRNAseq$X2)))
 
      
