@@ -87,3 +87,14 @@ grid.arrange(grobs = s, ncol = 5)
 ggdensity(na.omit(WGBS_data$`H1 Cell Line`)) + labs(x = "DNA Methylation (%)", y = "Density", title = Sample_name[1]) + theme_bw() + theme(axis.text.y=element_blank(),
                                                                                                                        axis.ticks.y=element_blank(), panel.border = element_blank(), panel.grid.major = element_blank(),
                                                                                                                        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+#Density curve of gene expression in each sample
+s <- lapply(1:ncol(RNAseq_data), function(i){
+  Sample_name <- colnames(RNAseq_data)
+  df <- data.frame(RNAseq_data[,i])
+  rownames(df) <- rownames(RNAseq_data)
+  sp <- ggdensity(na.omit(df[,1])) + labs(x = "Gene Expression (RPKM)", y = "Density (log2)", title = Sample_name[i]) + yscale('log2') + theme_bw() + theme(axis.text.y=element_blank(),
+                                                                                                                                 axis.ticks.y=element_blank(), panel.border = element_blank(), panel.grid.major = element_blank(),
+                                                                                                                                 panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+})
+grid.arrange(grobs = s, ncol = 5)
