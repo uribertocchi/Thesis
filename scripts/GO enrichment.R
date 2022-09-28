@@ -1,4 +1,5 @@
 library(plyr)
+library(rempsyc)
 
 #compute into groups by promoter methylation (By eye according to WGBS heatmap)
 Stem_Cells <- WGBS_data[,1:10]
@@ -40,8 +41,8 @@ write.csv(Grouped_WGBS, 'Grouped_WGBS.csv')
 #t-test
 
 combos <- combn(ncol(Grouped_WGBS),2)
-adply(combos, 2, function(x) {
-  test <- t.test(Grouped_WGBS[, x[1]], Grouped_WGBS[, x[2]])
+out <- adply(combos, 2, function(x) {
+  test <- t.test(Grouped_WGBS[, x[1]], Grouped_WGBS[, x[2]], paired = TRUE)
   
   out <- data.frame("var1" = colnames(Grouped_WGBS)[x[1]]
                     , "var2" = colnames(Grouped_WGBS[x[2]])
@@ -51,3 +52,9 @@ adply(combos, 2, function(x) {
   )
   return(out)
 })
+
+nice_table(out, 
+           title = c("Table 1", "T-test of similary-methylated sample groups"),
+           footnote = c("* p < .05, ** p < .01, *** p < .001"))
+
+write.csv(out, 'T-test of similarly-methylated samples.csv')
